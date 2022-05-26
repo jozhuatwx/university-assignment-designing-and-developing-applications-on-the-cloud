@@ -1,0 +1,23 @@
+<mat-form-field appearance="fill">
+  <mat-label>Search Route</mat-label>
+  <input type="text" matInput [formControl]="searchControl" [matAutocomplete]="auto">
+  <button matSuffix mat-icon-button>
+    <mat-icon>search</mat-icon>
+  </button>
+  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="select()">
+    <mat-option *ngFor="let route of filteredRoutes | async" [value]="route.name">
+      {{ route.name }}
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>
+<div class="spinner-container" *ngIf="loading; else notLoading">
+  <mat-spinner color="primary"></mat-spinner>
+</div>
+<ng-template #notLoading>
+  <mat-card *ngFor="let route of routes" [routerLink]="['/home', 'routes', route.id]">
+    <mat-card-title>{{route.name}}</mat-card-title>
+    <mat-card-content>
+      <span>{{(route.stations | maptoids | idstonames: stations | join: ' > ') || '-'}}</span>
+    </mat-card-content>
+  </mat-card>
+</ng-template>

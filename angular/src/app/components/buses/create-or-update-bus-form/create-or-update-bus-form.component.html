@@ -1,0 +1,29 @@
+<form [formGroup]="createOrUpdateForm">
+  <ng-template [ngIf]="bus?.id">
+    <mat-form-field appearance="fill">
+      <mat-label>ID</mat-label>
+      <input matInput disabled type="text" [value]="bus?.id">
+    </mat-form-field>
+    <br><br>
+  </ng-template>
+  <mat-form-field appearance="fill">
+    <mat-label>Number Plate</mat-label>
+    <input matInput type="text" formControlName="numberPlate" [errorStateMatcher]="matcher">
+    <mat-error *ngIf="createOrUpdateForm.get('numberPlate')?.hasError('required')">Number plate is required</mat-error>
+  </mat-form-field>
+  <br><br>
+  <mat-form-field appearance="fill">
+    <mat-label>Capacity</mat-label>
+    <input matInput type="number" formControlName="capacity" [errorStateMatcher]="matcher">
+    <mat-error *ngIf="createOrUpdateForm.get('capacity')?.hasError('min')">Minimum value is 1</mat-error>
+    <mat-error *ngIf="createOrUpdateForm.get('capacity')?.hasError('required')">Location value is required</mat-error>
+  </mat-form-field>
+  <br><br>
+  <button mat-raised-button color="accent" type="submit" (click)="submit()" [disabled]="processing || !createOrUpdateForm.valid">
+    <mat-spinner *ngIf="processing; else notProcessing" color="accent" [diameter]="17"></mat-spinner>
+    <ng-template #notProcessing>
+      <mat-icon>save</mat-icon>
+      <span>{{ bus?.id ? ' Update' : ' Create' }}</span>
+    </ng-template>
+  </button>
+</form>

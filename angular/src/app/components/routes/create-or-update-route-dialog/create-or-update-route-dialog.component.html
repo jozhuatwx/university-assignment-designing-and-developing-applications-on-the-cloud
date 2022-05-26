@@ -1,0 +1,4 @@
+<h1 mat-dialog-title>{{ data.route ? 'Edit' : 'Add' }}</h1>
+<div mat-dialog-content>
+  <app-create-or-update-route-form [stations]="data.stations" [route]="data.route" (routeChange)="dialogRef.close($event)"></app-create-or-update-route-form>
+</div>

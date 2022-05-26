@@ -1,0 +1,4 @@
+<h1 mat-dialog-title>{{ data ? 'Edit' : 'Add' }}</h1>
+<div mat-dialog-content>
+  <app-create-or-update-zone-form [zone]="data?.zone" (zoneChange)="dialogRef.close($event)"></app-create-or-update-zone-form>
+</div>

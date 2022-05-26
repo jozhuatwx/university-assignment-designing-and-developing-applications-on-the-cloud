@@ -1,0 +1,13 @@
+.dialog-title {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.dialog-content {
+  min-height: 400px;
+}
+
+.caption {
+  text-align: center;
+  font-size: large;
+}

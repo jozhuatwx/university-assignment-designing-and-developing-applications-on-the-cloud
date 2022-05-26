@@ -1,0 +1,99 @@
+<mat-stepper [linear]="true">
+  <ng-template [ngIf]="userApiService.isAdmin()">
+    <mat-step [stepControl]="userForm">
+      <form [formGroup]="userForm">
+        <ng-template matStepLabel>User</ng-template>
+        <mat-form-field appearance="fill">
+          <mat-label>Email</mat-label>
+          <input matInput type="text" formControlName="email" [errorStateMatcher]="matcher">
+          <mat-error *ngIf="userForm.get('email')?.hasError('pattern') && !userForm.get('email')?.hasError('required')">Please enter a valid email address</mat-error>
+          <mat-error *ngIf="userForm.get('email')?.hasError('required')">Email is required</mat-error>
+          <button matSuffix mat-icon-button (click)="loadUser()">
+            <mat-icon>search</mat-icon>
+          </button>
+        </mat-form-field>
+        <br><br>
+        <mat-label>Name: {{ user?.name }}</mat-label>
+        <br><br>
+        <button mat-raised-button color="accent" matStepperNext [disabled]="!user">Next</button>
+      </form>
+    </mat-step>
+  </ng-template>
+  <mat-step [stepControl]="topUpForm">
+    <form [formGroup]="topUpForm">
+      <ng-template matStepLabel>Amount</ng-template>
+      <mat-form-field appearance="fill">
+        <mat-label>Amount</mat-label>
+        <span matPrefix>RM </span>
+        <input matInput type="number" formControlName="amount" [errorStateMatcher]="matcher" cdkFocusInitial>
+        <mat-error *ngIf="topUpForm.get('amount')?.hasError('required')">Amount is required</mat-error>
+        <mat-error *ngIf="topUpForm.get('amount')?.hasError('min')">Minimum amount is 1</mat-error>
+      </mat-form-field>
+      <br><br>
+      <button type="submit" mat-raised-button color="accent" matStepperNext [disabled]="!topUpForm.valid">Next</button>
+    </form>
+  </mat-step>
+  <ng-template [ngIf]="!userApiService.isAdmin()">
+    <mat-step [stepControl]="cardForm">
+      <form [formGroup]="cardForm">
+        <ng-template matStepLabel>Card Details</ng-template>
+        <mat-form-field appearance="fill">
+          <mat-label>Name</mat-label>
+          <input matInput type="text" formControlName="name" [errorStateMatcher]="matcher" cdkFocusInitial>
+          <mat-error *ngIf="cardForm.get('name')?.hasError('required')">Name is required</mat-error>
+        </mat-form-field>
+        <br><br>
+        <mat-form-field appearance="fill">
+          <mat-label>Card Number</mat-label>
+          <input matInput type="text" formControlName="number" [errorStateMatcher]="matcher">
+          <mat-error *ngIf="cardForm.get('number')?.hasError('pattern') && !cardForm.get('number')?.hasError('required')">Please enter a valid card number</mat-error>
+          <mat-error *ngIf="cardForm.get('number')?.hasError('required')">Card number is required</mat-error>
+        </mat-form-field>
+        <br><br>
+        <div class="form-fields-container">
+          <mat-form-field appearance="fill">
+            <mat-label>CVV</mat-label>
+            <input matInput type="text" formControlName="cvv" [errorStateMatcher]="matcher">
+            <mat-error *ngIf="cardForm.get('cvv')?.hasError('pattern') && !cardForm.get('cvv')?.hasError('required')">Please enter a valid cvv</mat-error>
+            <mat-error *ngIf="cardForm.get('cvv')?.hasError('required')">CVV is required</mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Expiry Date</mat-label>
+            <input matInput type="month" formControlName="expiryDate" [errorStateMatcher]="matcher" [min]="minExpiryDate | date: 'yyyy-MM'" [max]="maxExpiryDate | date: 'yyyy-MM'">
+            <mat-error *ngIf="cardForm.get('expiryDate')?.hasError('required')">Expiry date is required</mat-error>
+          </mat-form-field>
+        </div>
+        <br>
+        <div class="buttons-container">
+          <button mat-stroked-button matStepperPrevious>Back</button>
+          <button type="submit" mat-raised-button color="accent" matStepperNext [disabled]="!cardForm.valid">Next</button>
+        </div>
+      </form>
+    </mat-step>
+  </ng-template>
+  <mat-step>
+    <ng-template matStepLabel>Confirm Details</ng-template>
+    <h2>User Details</h2>
+    <mat-label>Name: {{user?.name ? user?.name : userApiService.getCurrentUser().name}}</mat-label>
+    <br><br>
+    <mat-label>Email: {{user?.email ? user?.email : userApiService.getCurrentUser().email}}</mat-label>
+    <br><br>
+    <ng-template [ngIf]="!userApiService.isAdmin()">
+      <hr>
+      <h2>Card Details</h2>
+      <mat-label>Name: {{this.cardForm.get('name')?.value}}</mat-label>
+      <br><br>
+      <mat-label>Card Number: {{this.cardForm.get('number')?.value}}</mat-label>
+      <br><br>
+      <mat-label>Expiry Date: {{this.cardForm.get('expiryDate')?.value | date: 'M/yy'}}</mat-label>
+      <br><br>
+    </ng-template>
+    <hr>
+    <h2>Payment Details</h2>
+    <mat-label>Amount: {{this.topUpForm.get('amount')?.value | currency: 'RM ':'symbol':'1.2-2'}}</mat-label>
+    <br><br>
+    <div class="full-container">
+      <button type="submit" mat-raised-button color="accent" type="submit" (click)="topUp()">Top Up</button>
+    </div>
+  </mat-step>
+</mat-stepper>

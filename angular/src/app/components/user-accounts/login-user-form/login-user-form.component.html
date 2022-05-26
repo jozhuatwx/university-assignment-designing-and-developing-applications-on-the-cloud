@@ -1,0 +1,29 @@
+<form [formGroup]="loginForm">
+  <br>
+  <mat-form-field appearance="fill">
+    <mat-label>Email</mat-label>
+    <input matInput type="email" name="email" formControlName="email" [errorStateMatcher]="matcher">
+    <mat-error *ngIf="loginForm.get('email')?.hasError('pattern') && !loginForm.get('email')?.hasError('required')">Please enter a valid email address</mat-error>
+    <mat-error *ngIf="loginForm.get('email')?.hasError('required')">Email is required</mat-error>
+  </mat-form-field>
+  <br><br>
+  <mat-form-field appearance="fill">
+    <mat-label>Password</mat-label>
+    <input matInput [type]="hidePassword ? 'password' : 'text'" name="password" formControlName="password" [errorStateMatcher]="matcher">
+    <mat-icon matSuffix (click)="hidePassword = !hidePassword">{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+    <mat-error *ngIf="loginForm.get('password')?.hasError('required')">Password is required</mat-error>
+  </mat-form-field>
+  <br><br>
+  <mat-checkbox formControlName="stayLoggedIn">Stay logged in</mat-checkbox>
+  <br><br>
+  <button mat-raised-button color="accent" type="submit" (click)="login()" [disabled]="loggingIn || !loginForm.valid">
+    <mat-spinner *ngIf="loggingIn; else notLoggingIn" color="accent" [diameter]="17"></mat-spinner>
+    <ng-template #notLoggingIn>
+      Login
+    </ng-template>
+  </button>
+</form>
+<br>
+<div class="register">
+  Or <a (click)="close.emit()" [routerLink]="['/register']">Register</a>
+</div>

@@ -1,0 +1,58 @@
+<mat-toolbar class="secondary-toolbar">
+  <span>Buses</span>
+  <span class="toolbar-spacer"></span>
+  <button mat-stroked-button color="accent" (click)="add()">
+    <mat-icon>add_circle_outline</mat-icon>
+    <span> Add</span>
+  </button>
+</mat-toolbar>
+<hr>
+<div class="spinner-container" *ngIf="loading">
+  <mat-spinner color="primary"></mat-spinner>
+</div>
+<table [hidden]="loading" mat-table matSort [dataSource]="tableDataSource">
+  <ng-container matColumnDef="id">
+    <th mat-header-cell *matHeaderCellDef>ID</th>
+    <td mat-cell *matCellDef="let item">{{item.id}}</td>
+  </ng-container>
+  <ng-container matColumnDef="numberPlate">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Number Plate</th>
+    <td mat-cell *matCellDef="let item">{{item.numberPlate}}</td>
+  </ng-container>
+  <ng-container matColumnDef="capacity">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Capacity</th>
+    <td mat-cell *matCellDef="let item">{{item.capacity}}</td>
+  </ng-container>
+  <ng-container matColumnDef="currentUsage">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Current Usage</th>
+    <td mat-cell *matCellDef="let item">{{item.currentUsage}}</td>
+  </ng-container>
+  <ng-container matColumnDef="currentRoute">
+    <th mat-header-cell *matHeaderCellDef>Current Route</th>
+    <td mat-cell *matCellDef="let item">{{item.currentRouteId | idtoname: routes}}</td>
+  </ng-container>
+  <ng-container matColumnDef="stationName">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Current Station</th>
+    <td mat-cell *matCellDef="let item">{{item.currentRouteId ? item.stationName : '-'}}</td>
+  </ng-container>
+  <ng-container matColumnDef="disinfectionTime">
+    <th mat-header-cell *matHeaderCellDef>Last Disinfection Time</th>
+    <td mat-cell *matCellDef="let item">{{(item.disinfectionTime | date: 'short') || '-'}}</td>
+  </ng-container>
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef>Actions</th>
+    <td mat-cell *matCellDef="let item" class="inline-buttons-container">
+      <button mat-stroked-button (click)="qrCode(item.numberPlate)">
+        <mat-icon>qr_code</mat-icon>
+      </button>
+      <button mat-stroked-button color="accent" (click)="edit(item)">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button [disabled]="item.currentRouteId" mat-stroked-button color="warn" (click)="delete(item.id)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>  

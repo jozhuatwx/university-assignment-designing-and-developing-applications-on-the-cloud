@@ -1,0 +1,16 @@
+<h1 mat-dialog-title class="dialog-title">
+  <span>QR Code</span>
+  <span class="toolbar-spacer"></span>
+  <button mat-button>
+    <mat-icon (click)="downloadQr()">download</mat-icon>
+  </button>
+</h1>
+<div mat-dialog-content class="dialog-content">
+  <ngx-qrcode [value]="data.numberPlate"
+    [errorCorrectionLevel]="errorCorrectionLevel"
+    [margin]="1"
+    [scale]="15">
+  </ngx-qrcode>
+  <br>
+  <div class="caption">{{data.numberPlate}}</div>
+</div>

@@ -1,0 +1,80 @@
+<form [formGroup]="updateForm">
+  <mat-label>Profile Picture</mat-label>
+  <br><br>
+  <div *ngIf="previewSrc; else noProfilePicture" class="profile-picture-preview-frame">
+    <img class="profile-picture-preview" [src]="previewSrc">
+    <br>
+    <button mat-icon-button (click)="clearProfilePicture()">
+      <mat-icon>clear</mat-icon>
+      <span> Clear</span>
+    </button>
+  </div>
+  <ng-template #noProfilePicture>
+    <input type="file" accept="image/*" formControlName="profilePicture" (change)="previewProfilePicture($event)">
+  </ng-template>
+  <br><br>
+  <mat-form-field appearance="fill">
+    <mat-label>ID</mat-label>
+    <input matInput disabled type="text" [value]="user.id">
+  </mat-form-field>
+  <br><br>
+  <mat-form-field appearance="fill">
+    <mat-label>Email</mat-label>
+    <input matInput type="email" formControlName="email" [errorStateMatcher]="matcher" cdkFocusInitial>
+    <mat-error *ngIf="updateForm.get('email')?.hasError('pattern') && !updateForm.get('email')?.hasError('required')">Please enter a valid email address</mat-error>
+    <mat-error *ngIf="updateForm.get('email')?.hasError('required')">Email is required</mat-error>
+  </mat-form-field>
+  <br><br>
+  <mat-form-field appearance="fill">
+    <mat-label>Name</mat-label>
+    <input matInput type="text" formControlName="name" [errorStateMatcher]="matcher">
+    <mat-error *ngIf="updateForm.get('name')?.hasError('required')">Name is required</mat-error>
+  </mat-form-field>
+  <ng-template [ngIf]="this.userApiService.isAdmin()">
+    <br><br>
+    <mat-form-field appearance="fill">
+      <mat-label>Role</mat-label>
+      <mat-select formControlName="role">
+        <mat-option *ngFor="let role of roles" [value]="role.key">{{role.value}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </ng-template>
+  <br><br>
+  <ng-template [ngIf]="this.userApiService.getCurrentUser().id === this.user.id">
+    <mat-slide-toggle formControlName="updatePassword" (change)="updatePasswordToggle($event)">Update Password</mat-slide-toggle>
+    <ng-template [ngIf]="this.updateForm.get('updatePassword')?.value">
+      <div formGroupName="newPassword">
+        <br><br>
+        <mat-form-field appearance="fill">
+          <mat-label>Password</mat-label>
+          <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" [errorStateMatcher]="matcher">
+          <mat-icon matSuffix (click)="hidePassword = !hidePassword">{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+          <mat-error *ngIf="updateForm.get('password')?.hasError('required')">Password is required</mat-error>
+        </mat-form-field>    
+        <br><br>
+        <mat-form-field appearance="fill">
+          <mat-label>New Password</mat-label>
+          <input matInput [type]="hideNewPassword ? 'password' : 'text'" formControlName="newPassword" [errorStateMatcher]="matcher">
+          <mat-icon matSuffix (click)="hideNewPassword = !hideNewPassword">{{hideNewPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+          <mat-error *ngIf="updateForm.get('newPassword.newPassword')?.hasError('required')">Password is required</mat-error>
+          <mat-error *ngIf="updateForm.get('newPassword.newPassword')?.hasError('pattern')">Password is must be at least 8 characters and contains at least 1 uppercase letter, 1 lowercase letter, and 1 number.</mat-error>
+        </mat-form-field>
+        <br><br>
+        <mat-form-field appearance="fill">
+          <mat-label>Confirm Password</mat-label>
+          <input matInput [type]="hideConfirmPassword ? 'password' : 'text'" formControlName="confirmNewPassword" [errorStateMatcher]="newPasswordMatcher">
+          <mat-icon matSuffix (click)="hideConfirmPassword = !hideConfirmPassword">{{hideConfirmPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+          <mat-error *ngIf="updateForm.get('newPassword')?.hasError('notSame')">Password is not same</mat-error>
+        </mat-form-field>
+      </div>
+    </ng-template>
+    <br><br>
+  </ng-template>
+  <button mat-raised-button color="accent" type="submit" (click)="update()" [disabled]="updating || !updateForm.valid">
+    <mat-spinner *ngIf="updating; else notUpdating" color="accent" [diameter]="17"></mat-spinner>
+    <ng-template #notUpdating>
+      <mat-icon>save</mat-icon>
+      <span> Update</span>
+    </ng-template>
+  </button>
+</form>

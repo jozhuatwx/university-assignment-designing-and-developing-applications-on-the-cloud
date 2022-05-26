@@ -1,0 +1,69 @@
+<div class="current-route full-container">
+  <mat-form-field appearance="fill">
+    <mat-label>Current Route</mat-label>
+    <input type="text" matInput [formControl]="searchControl" [matAutocomplete]="auto">
+    <mat-autocomplete #auto="matAutocomplete">
+      <mat-option *ngFor="let route of filteredRoutes | async" [value]="route.name">
+        {{ route.name }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+  <button *ngIf="bus?.currentRouteId; else updateRoute" mat-stroked-button color="warn" (click)="stopRoute()">
+    <mat-icon>cancel</mat-icon>
+    <span> Stop</span>
+  </button>
+  <ng-template #updateRoute>
+    <button mat-raised-button color="accent" (click)="selectRoute()">
+      <mat-icon>save</mat-icon>
+      <span> Update</span>
+    </button>
+  </ng-template>
+</div>
+<br><hr><br>
+<div class="spinner-container" *ngIf="loading[0] || loading[1]; else notLoading">
+  <mat-spinner color="primary"></mat-spinner>
+</div>
+<ng-template #notLoading>
+  <div class="inline-container">
+    <mat-label>Current Usage:</mat-label>
+    <button [disabled]="!currentRoute || bus?.currentUsage === 0" mat-raised-button (click)="updateUsage(-1)">
+      <mat-icon>remove</mat-icon>
+    </button>
+    <span>{{bus?.currentUsage}} / {{bus?.capacity}}</span>
+    <button [disabled]="!currentRoute || bus?.currentUsage === bus?.capacity" mat-raised-button (click)="updateUsage(1)">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+  <br><hr><br>
+  <div class="current-station">
+    <div>
+      <mat-label>Current Station:</mat-label>
+      <br><br>
+      <h1 class="station-name">{{stations ? stations[currentStationIndex].name : '-'}}</h1>
+    </div>
+    <br>
+    <div class="inline-container">
+      <button [disabled]="!currentRoute" mat-raised-button (click)="updateStation(prevStationIndex)">
+        <mat-icon>navigate_before</mat-icon>
+        <span>{{stations ? stations[prevStationIndex].name : '-'}}</span>
+      </button>
+      <button [disabled]="!currentRoute" mat-raised-button (click)="updateStation(nextStationIndex)">
+        <span>{{stations ? stations[nextStationIndex].name : '-'}}</span>
+        <mat-icon>navigate_next</mat-icon>
+      </button>
+    </div>
+  </div>
+  <br><hr><br>
+  <div class="disinfection full-container">
+    <div>
+      <mat-label>Last Disinfection Time:</mat-label>
+      <br><br>
+      <h2 class="disinfection-time">{{(bus?.disinfectionTime | date: 'short') || '-'}}</h2>
+    </div>
+    <br>
+    <button [disabled]="!currentRoute" mat-raised-button (click)="disinfect()">
+      <mat-icon>sanitizer</mat-icon>
+      <span> Disinfect</span>
+    </button>
+  </div>  
+</ng-template>

@@ -1,0 +1,22 @@
+table {
+  border-collapse: collapse;
+}
+
+td, th {
+  border: 1px solid rgba(255,255,255,.12);
+  text-align: left;
+  padding: 6px;
+}
+
+.add {
+  mat-form-field {
+    width: 85%;
+  }
+  button {
+    width: unset;
+  }
+}
+
+.inline-buttons-container button {
+  width: fit-content;
+}

@@ -1,0 +1,50 @@
+<h1 class="title-container">
+  <button mat-button class="back" (click)="back()">
+    <mat-icon>chevron_left</mat-icon>
+  </button>
+  <span class="title">{{route?.name}}</span>
+</h1>
+<hr>
+<div class="spinner-container" *ngIf="loading; else notLoading">
+  <mat-spinner color="primary"></mat-spinner>
+</div>
+<ng-template #notLoading>
+  <h2>Stations</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>No.</th>
+        <th>Station</th>
+        <th>Zone</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let station of stations; index as i">
+        <td>{{i + 1}}</td>
+        <td>{{station.name}}</td>
+        <td>{{station.zoneId | idtoname: zones}}</td>
+      </tr>
+    </tbody>
+  </table>
+  <br>
+  <hr>
+  <h2>Buses</h2>
+  <div class="buses">
+    <mat-card *ngFor="let bus of buses">
+      <mat-card-subtitle>{{bus.stationName}} | {{bus.timestamp | date: 'shortTime'}}</mat-card-subtitle>
+      <mat-card-title>{{bus.numberPlate}}</mat-card-title>
+      <br>
+      <mat-card-content>
+        <div>
+          <mat-label>Current Usage: </mat-label>
+          <span>{{bus.currentUsage}} / {{bus.capacity}}</span>
+        </div>
+        <br>
+        <div>
+          <mat-label>Last Disinfection Time: </mat-label>
+          <span>{{(bus.disinfectionTime | date: 'short') || '-'}}</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</ng-template>

@@ -1,0 +1,28 @@
+<mat-toolbar class="secondary-toolbar">
+  <span>Balance: {{balance | currency: 'RM ':'symbol':'1.2-2'}}</span>
+  <span class="toolbar-spacer"></span>
+  <button mat-stroked-button color="accent" (click)="add()">
+    <mat-icon>add_circle_outline</mat-icon>
+    <span> Top Up</span>
+  </button>
+</mat-toolbar>
+<hr>
+<div class="spinner-container" *ngIf="loading">
+  <mat-spinner color="primary"></mat-spinner>
+</div>
+<div class="payments">
+  <mat-card *ngFor="let payment of payments">
+    <mat-card-subtitle>{{payment.type | paymenttype | titlecase}} | {{payment.timestamp | date: 'short'}}</mat-card-subtitle>
+    <mat-card-title>{{payment.amount | currency: 'RM ':'symbol':'1.2-2'}}</mat-card-title>
+    <ng-template [ngIf]="payment.type == 0">
+      <div>
+        <mat-label>Start Station:</mat-label>
+        <span> {{payment.startingStationId | idtoname: stations}}</span>
+      </div>
+      <div>
+        <mat-label>End Station:</mat-label>
+        <span> {{payment.endingStationId | idtoname: stations}}</span>
+      </div>
+    </ng-template>
+  </mat-card>
+</div>

@@ -1,0 +1,22 @@
+<ng-template [ngIf]="scan" [ngIfElse]="enableScan">
+  <mat-form-field appearance="fill">
+    <mat-label>Camera</mat-label>
+    <mat-select [(value)]="deviceCurrent">
+      <mat-option value="">No Device Selected</mat-option>
+      <mat-option *ngFor="let device of availableDevices" [value]="device">{{device.label}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <zxing-scanner [formats]="formats"
+    [(device)]="deviceCurrent"
+    (scanSuccess)="onCodeResult($event)"
+    (camerasFound)="onCamerasFound($event)"
+    [enable]="scan">
+  </zxing-scanner>
+</ng-template>
+<ng-template #enableScan>
+  <button mat-raised-button color="accent" (click)="scan = true">
+    <mat-icon>qr_code_scanner</mat-icon>
+    <span> Scan QR Code</span>
+  </button>
+  <br>
+</ng-template>

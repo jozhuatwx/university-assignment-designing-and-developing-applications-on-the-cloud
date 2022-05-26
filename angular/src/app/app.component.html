@@ -1,0 +1,52 @@
+<mat-toolbar color="primary">
+  <button *ngIf="userApiService.isAuthenticated()" mat-icon-button (click)="sidenavOpen = !sidenavOpen">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <a [routerLink]="['/home']">Bus United Malaysia</a>
+
+  <span class="toolbar-spacer"></span>
+
+  <button *ngIf="!userApiService.isAuthenticated()" mat-button (click)="login()">
+    <mat-icon>login</mat-icon>
+    <span> Login</span>
+  </button>
+</mat-toolbar>
+
+<mat-sidenav-container>
+  <mat-sidenav *ngIf="userApiService.isAuthenticated()" [mode]="mode" [(opened)]="sidenavOpen">
+    <mat-nav-list>
+      <mat-list-item *ngFor="let link of links" [routerLink]="link.path" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        <mat-icon matListIcon>{{link.icon}}</mat-icon>
+        <span matLine>{{link.name}}</span>
+      </mat-list-item>
+      <mat-list-item [matMenuTriggerFor]="menu">
+        <img *ngIf="userApiService.getCurrentUser().profilePictureFileUrl; else linkIcon"
+          matListAvatar
+          class="profile-picture"
+          [src]="userApiService.getCurrentUser().profilePictureFileUrl">
+        <ng-template #linkIcon>
+          <mat-icon matListIcon>account_circle</mat-icon>
+        </ng-template>
+        <span matLine>{{userApiService.getCurrentUser().name}}</span>
+      </mat-list-item>
+      <mat-list-item (click)="logout()">
+        <mat-icon matListIcon>logout</mat-icon>
+        <span matLine>Logout</span>
+      </mat-list-item>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+<mat-menu #menu="matMenu">
+  <button mat-menu-item (click)="edit()">
+    <mat-icon>edit</mat-icon>
+    <span> Edit</span>
+  </button>
+  <button mat-menu-item (click)="delete()">
+    <mat-icon>delete</mat-icon>
+    <span> Delete</span>
+  </button>
+</mat-menu>

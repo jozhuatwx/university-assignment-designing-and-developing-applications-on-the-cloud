@@ -1,0 +1,63 @@
+<form [formGroup]="createOrUpdateForm">
+  <ng-template [ngIf]="route?.id">
+    <mat-form-field appearance="fill">
+      <mat-label>ID</mat-label>
+      <input matInput disabled type="text" [value]="route?.id">
+    </mat-form-field>
+    <br><br>
+  </ng-template>
+  <mat-form-field appearance="fill">
+    <mat-label>Name</mat-label>
+    <input matInput type="text" formControlName="name" [errorStateMatcher]="matcher">
+    <mat-error *ngIf="createOrUpdateForm.get('name')?.hasError('required')">Name is required</mat-error>
+  </mat-form-field>
+  <br><br>
+  <table>
+    <thead>
+      <tr>
+        <th>No.</th>
+        <th>Station</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let station of selectedStations; index as i">
+        <td>{{i + 1}}</td>
+        <td>{{station.name}}</td>
+        <td class="inline-buttons-container">
+          <button [disabled]="i === 0" mat-stroked-button (click)="swap(i, i - 1)">
+            <mat-icon>arrow_upward</mat-icon>
+          </button>
+          <button [disabled]="i === selectedStations.length - 1" mat-stroked-button (click)="swap(i, i + 1)">
+            <mat-icon>arrow_downward</mat-icon>
+          </button>
+          <button mat-stroked-button color="warn" (click)="removeStation(i)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <br>
+  <mat-error *ngIf="selectedStations.length === 0">Stations are required</mat-error>
+  <br>
+  <div class="add">
+    <mat-form-field appearance="fill">
+      <mat-label>Stations</mat-label>
+      <mat-select formControlName="selectedStation">
+        <mat-option *ngFor="let station of stations" [value]="station">{{station.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button mat-button color="accent" (click)="addStation()">
+      <mat-icon>add_circle_outline</mat-icon>
+    </button>
+  </div>
+  <br>
+  <button mat-raised-button color="accent" type="submit" (click)="submit()" [disabled]="processing || !createOrUpdateForm.get('name')?.valid || selectedStations.length == 0">
+    <mat-spinner *ngIf="processing; else notProcessing" color="accent" [diameter]="17"></mat-spinner>
+    <ng-template #notProcessing>
+      <mat-icon>save</mat-icon>
+      <span>{{ route?.id ? ' Update' : ' Create' }}</span>
+    </ng-template>
+  </button>
+</form>

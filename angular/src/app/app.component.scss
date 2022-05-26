@@ -1,0 +1,19 @@
+mat-sidenav-container {
+  height: var(--content-container-height);
+}
+
+mat-nav-list {
+  width: 236px;
+}
+
+.profile-picture {
+  margin: 4px !important;
+  height: 24px !important;
+  width: 24px !important;
+  object-fit: cover;
+}
+
+mat-sidenav-content {
+  height: var(--content-height);
+  padding: var(--content-containter-padding);
+}

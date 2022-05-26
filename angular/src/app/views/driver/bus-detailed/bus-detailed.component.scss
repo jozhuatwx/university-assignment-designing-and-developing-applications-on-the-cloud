@@ -1,0 +1,12 @@
+.inline-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.station-name,
+.disinfection-time {
+  text-align: center;
+  margin: 5px 0;
+}

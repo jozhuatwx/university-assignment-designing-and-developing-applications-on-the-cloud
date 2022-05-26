@@ -1,0 +1,4 @@
+<h1 mat-dialog-title>Edit</h1>
+<div mat-dialog-content>
+  <app-update-user-form [user]="data.user" (userChange)="dialogRef.close($event)"></app-update-user-form>
+</div>

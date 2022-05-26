@@ -1,0 +1,28 @@
+.title-container {
+  display: flex;
+
+  .back {
+    padding: 0;
+    margin: 0;
+  }
+
+  .title {
+    margin-top: 3px;
+  }
+}
+
+table {
+  border-collapse: collapse;
+}
+
+td, th {
+  border: 1px solid rgba(255,255,255,.12);
+  text-align: left;
+  padding: 6px;
+}
+
+.buses {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}

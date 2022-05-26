@@ -1,0 +1,30 @@
+<form [formGroup]="createOrUpdateForm">
+  <ng-template [ngIf]="station?.id">
+    <mat-form-field appearance="fill">
+      <mat-label>ID</mat-label>
+      <input matInput disabled type="text" [value]="station?.id">
+    </mat-form-field>
+    <br><br>
+  </ng-template>
+  <mat-form-field appearance="fill">
+    <mat-label>Name</mat-label>
+    <input matInput type="text" formControlName="name" [errorStateMatcher]="matcher">
+    <mat-error *ngIf="createOrUpdateForm.get('name')?.hasError('required')">Name is required</mat-error>
+  </mat-form-field>
+  <br><br>
+  <mat-form-field appearance="fill">
+    <mat-label>Zone</mat-label>
+    <mat-select formControlName="zoneId">
+      <mat-option *ngFor="let zone of zones" [value]="zone.id">{{zone.name}}</mat-option>
+    </mat-select>
+    <mat-error *ngIf="createOrUpdateForm.get('zoneId')?.hasError('required')">Zone is required</mat-error>
+  </mat-form-field>
+  <br><br>
+  <button mat-raised-button color="accent" type="submit" (click)="submit()" [disabled]="processing || !createOrUpdateForm.valid">
+    <mat-spinner *ngIf="processing; else notProcessing" color="accent" [diameter]="17"></mat-spinner>
+    <ng-template #notProcessing>
+      <mat-icon>save</mat-icon>
+      <span>{{ station?.id ? ' Update' : ' Create' }}</span>
+    </ng-template>
+  </button>
+</form>
